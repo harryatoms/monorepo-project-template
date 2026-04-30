@@ -1,0 +1,56 @@
+# Project Conventions
+
+This project is a generic FastAPI + SvelteKit monorepo boilerplate.
+
+## Routing
+
+API routes live in:
+
+apps/example-api/app/api/routes
+
+Routes must:
+- remain thin
+- validate input
+- call service functions
+
+Routes must NOT contain business logic.
+
+## Services
+
+Business logic lives in:
+
+apps/example-api/app/services
+
+Services should:
+- contain application logic
+- be deterministic unless explicitly integrating an external provider
+- return structured data objects
+
+## Schemas
+
+Pydantic schemas live in:
+
+apps/example-api/app/schemas
+
+All API inputs and outputs must use schemas.
+
+## Testing
+
+Tests live in:
+
+apps/example-api/tests
+
+Each endpoint should have:
+- success test
+- validation or method/error test where applicable
+
+## Dependencies
+
+Do not introduce heavy frameworks unless required.
+
+Specifically avoid adding:
+- LangChain
+- Celery
+- database ORMs
+
+until the architecture requires them.

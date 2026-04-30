@@ -1,0 +1,17 @@
+name: App Check
+description: >
+  Runs `make check APP=<app>` for a monorepo app.
+  Assumes the repository is checked out, the runtime is configured,
+  and the app has been bootstrapped.
+
+inputs:
+  app:
+    description: App name (directory under apps/)
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Check
+      shell: bash
+      run: make check APP=${{ inputs.app }}

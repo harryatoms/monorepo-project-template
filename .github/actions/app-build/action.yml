@@ -1,0 +1,28 @@
+name: App Build
+description: >
+  Computes a version tag from the current commit SHA, then runs
+  `make build VERSION=<version>` for a monorepo app.
+  Assumes the repository is checked out and Docker is configured.
+
+inputs:
+  app:
+    description: App name (directory under apps/)
+    required: true
+
+outputs:
+  version:
+    description: Full commit SHA used for this build (e.g. 13bbf65add790da52f201bbc715da665b2aec5ad)
+    value: ${{ steps.version.outputs.value }}
+
+runs:
+  using: composite
+  steps:
+    - name: Compute version
+      id: version
+      shell: bash
+      run: echo "value=${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+
+    - name: Build
+      shell: bash
+      run: make build VERSION=${{ steps.version.outputs.value }}
+      working-directory: apps/${{ inputs.app }}

@@ -1,0 +1,64 @@
+{
+  "run_at": "1970-01-01T00:00:00+00:00",
+  "call_name": "example",
+  "call_version": "1",
+  "model": "gpt-4.1-mini",
+  "dataset": "packages/example-evals/example_evals/datasets/example/scenarios.jsonl",
+  "tag": "baseline",
+  "summary": {
+    "total": 2,
+    "passed": 2,
+    "failed": 0
+  },
+  "results": [
+    {
+      "id": "loads-example-prompt",
+      "input": "Summarize how this boilerplate demonstrates app boundaries.",
+      "passed": true,
+      "failures": [],
+      "response": {
+        "message": "Example boilerplate response for: Summarize how this boilerplate demonstrates app boundaries."
+      },
+      "expected": {
+        "contains": [
+          "boilerplate"
+        ]
+      },
+      "labels": {
+        "tags": [
+          "smoke",
+          "core"
+        ]
+      },
+      "metrics": {
+        "response_length": 91
+      },
+      "latency_ms": 0,
+      "error": null
+    },
+    {
+      "id": "loads-sample-resource-contract",
+      "input": "Describe the sample resource endpoint contract.",
+      "passed": true,
+      "failures": [],
+      "response": {
+        "message": "Example boilerplate response for: Describe the sample resource endpoint contract."
+      },
+      "expected": {
+        "contains": [
+          "sample"
+        ]
+      },
+      "labels": {
+        "tags": [
+          "smoke"
+        ]
+      },
+      "metrics": {
+        "response_length": 85
+      },
+      "latency_ms": 0,
+      "error": null
+    }
+  ]
+}

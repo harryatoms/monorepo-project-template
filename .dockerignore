@@ -1,0 +1,30 @@
+# Version control
+.git/
+
+# Python artifacts
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.egg-info/
+**/.pytest_cache/
+
+# Virtual environments
+**/.venv/
+
+# Secrets — pass at runtime via environment, never bake into the image
+**/.env
+
+# Test code — not needed in the image
+apps/example-api/tests/
+
+# Dev-only package (example-evals is not a runtime dependency)
+packages/example-evals/
+
+# Eval pipeline artefacts
+evals/
+
+# Infrastructure, docs, editor artefacts
+infra/
+docs/
+.cursor/
+.vscode/

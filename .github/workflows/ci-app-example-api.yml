@@ -1,0 +1,35 @@
+name: CI — Example API
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      # App source code and dependencies
+      - 'apps/example-api/**'
+      - 'packages/**'
+
+      # App infrastructure (infra changes should still run app checks)
+      - 'infra/environments/staging/apps/example-api/**'
+
+      # CI workflow and actions
+      - '.github/workflows/ci-app-example-api.yml'
+      - '.github/actions/app-bootstrap/**'
+      - '.github/actions/app-check/**'
+      - '.github/actions/setup-python/**'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository
+      - uses: actions/checkout@v4
+      # Set up Python
+      - uses: ./.github/actions/setup-python
+      # Bootstrap the app
+      - uses: ./.github/actions/app-bootstrap
+        with:
+          app: example-api
+      # Run the checks
+      - uses: ./.github/actions/app-check
+        with:
+          app: example-api

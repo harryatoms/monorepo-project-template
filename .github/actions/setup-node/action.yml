@@ -1,0 +1,10 @@
+name: Node Setup
+description: Configure Node (version pinned to mise.toml)
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'

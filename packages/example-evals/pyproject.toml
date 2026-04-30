@@ -1,0 +1,13 @@
+[project]
+name = "example-evals"
+version = "0.1.0"
+description = "Optional example eval datasets and loaders for the boilerplate"
+requires-python = ">=3.11"
+dependencies = ["example-prompts", "pydantic>=2.7.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["example_evals"]

@@ -1,0 +1,10 @@
+name: Terraform Setup
+description: Install Terraform (version pinned to ~> 1.9 per infra/providers.tf)
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: "~> 1.9"

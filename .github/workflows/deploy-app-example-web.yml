@@ -1,0 +1,49 @@
+name: Deploy to Staging — Example Web
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/example-web/**"
+      - ".github/workflows/deploy-app-example-web.yml"
+      - ".github/actions/**"
+  workflow_dispatch:
+
+concurrency:
+  group: staging-deploy-example-web
+  cancel-in-progress: true
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-node
+      - name: Set up AWS
+        uses: ./.github/actions/setup-aws
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ vars.EXAMPLE_WEB_STAGING_AWS_DEPLOY_ROLE_ARN }}
+      - uses: ./.github/actions/app-bootstrap
+        with:
+          app: example-web
+      - name: Read API endpoint from SSM
+        run: |
+          API_URL=$(aws ssm get-parameter             --name "/example-monorepo/staging/api-gateway-endpoint"             --query "Parameter.Value"             --output text)
+          echo "PUBLIC_API_URL=${API_URL}" >> "$GITHUB_ENV"
+      - name: Build
+        run: make build APP=example-web
+      - name: Deploy
+        env:
+          S3_BUCKET: ${{ vars.EXAMPLE_WEB_STAGING_S3_BUCKET_NAME }}
+          CLOUDFRONT_DISTRIBUTION_ID: ${{ vars.EXAMPLE_WEB_STAGING_CLOUDFRONT_DISTRIBUTION_ID }}
+        run: make deploy APP=example-web ENV=staging
+      - name: Smoke test
+        env:
+          APP_ENDPOINT: ${{ vars.EXAMPLE_WEB_STAGING_APP_ENDPOINT }}
+        run: make smoke APP=example-web ENV=staging

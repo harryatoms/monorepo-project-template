@@ -1,0 +1,2 @@
+{"id":"loads-example-prompt","prompt":"Summarize how this boilerplate demonstrates app boundaries.","expect":{"contains":["boilerplate"]},"tags":["smoke","core"]}
+{"id":"loads-sample-resource-contract","prompt":"Describe the sample resource endpoint contract.","expect":{"contains":["sample"]},"tags":["smoke"]}

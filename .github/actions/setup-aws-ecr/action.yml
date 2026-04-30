@@ -1,0 +1,16 @@
+name: AWS ECR Setup
+description: >
+  Log in to Amazon ECR and output the registry URL.
+  Assumes AWS credentials are already configured (e.g. via setup-aws).
+
+outputs:
+  ecr-registry:
+    description: ECR registry URL (e.g. 123456789012.dkr.ecr.us-east-1.amazonaws.com)
+    value: ${{ steps.ecr-login.outputs.registry }}
+
+runs:
+  using: composite
+  steps:
+    - name: Log in to Amazon ECR
+      id: ecr-login
+      uses: aws-actions/amazon-ecr-login@v2

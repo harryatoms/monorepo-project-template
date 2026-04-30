@@ -1,0 +1,34 @@
+name: CI — Example Web
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      # App source code
+      - 'apps/example-web/**'
+
+      # App infrastructure (infra changes should still run app checks)
+      - 'infra/environments/staging/apps/example-web/**'
+
+      # CI workflow and actions
+      - '.github/workflows/ci-app-example-web.yml'
+      - '.github/actions/app-bootstrap/**'
+      - '.github/actions/app-check/**'
+      - '.github/actions/setup-node/**'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository
+      - uses: actions/checkout@v4
+      # Set up Node
+      - uses: ./.github/actions/setup-node
+      # Bootstrap the app
+      - uses: ./.github/actions/app-bootstrap
+        with:
+          app: example-web
+      # Run the checks
+      - uses: ./.github/actions/app-check
+        with:
+          app: example-web

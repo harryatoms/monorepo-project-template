@@ -1,0 +1,76 @@
+name: CI — Monorepo
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  check-secrets:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  check-terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-terraform
+      - name: Terraform fmt
+        run: terraform fmt -check -diff -recursive infra/
+
+  detect-changes:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      evals: ${{ steps.filter.outputs.evals }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            evals:
+              - 'packages/example-prompts/**'
+              - 'packages/example-evals/**'
+              - 'evals/**'
+              - '.github/workflows/ci_monorepo.yml'
+
+  evals:
+    needs: detect-changes
+    if: |
+      always() && (
+        github.event_name == 'workflow_dispatch' ||
+        (needs.detect-changes.result == 'success' && needs.detect-changes.outputs.evals == 'true')
+      )
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-python
+      - uses: ./.github/actions/app-bootstrap
+        with:
+          app: example-api
+      - name: Run all evals
+        run: make eval-all
+      - name: Compare all evals against baselines
+        run: make eval-compare-all
+      - name: Upload eval results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results-${{ github.run_id }}
+          path: evals/results/
+          retention-days: 14

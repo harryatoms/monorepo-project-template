@@ -1,0 +1,13 @@
+name: Docker Setup
+description: >
+  Configure Docker Buildx using the docker driver.
+  Images built are loaded into the local daemon, enabling
+  docker tag and docker push after make build.
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      with:
+        driver: docker
