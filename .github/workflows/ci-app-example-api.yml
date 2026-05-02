@@ -7,7 +7,7 @@ on:
       - "apps/example-api/**"
       - "packages/example-prompts/**"
       - "packages/example-evals/**"
-      - ".github/workflows/deploy-app-example-api.yml"
+      - ".github/workflows/ci-app-example-api.yml"
       - ".github/actions/**"
   pull_request:
     branches: [main]

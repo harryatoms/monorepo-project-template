@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - "apps/example-web/**"
-      - ".github/workflows/deploy-app-example-web.yml"
+      - ".github/workflows/ci-app-example-web.yml"
       - ".github/actions/**"
   pull_request:
     branches: [main]
