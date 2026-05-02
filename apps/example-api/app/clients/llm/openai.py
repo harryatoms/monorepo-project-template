@@ -58,6 +58,7 @@ def get_llm_client() -> OpenAITextClient:
 
 def _resolve_api_key(settings: Settings) -> str:
     if settings.ssm_openai_api_key_path:
+        parameter_path = settings.ssm_openai_api_key_path
         try:
             import boto3
         except ImportError as exc:
@@ -66,13 +67,14 @@ def _resolve_api_key(settings: Settings) -> str:
             ) from exc
         try:
             ssm = boto3.client("ssm", region_name=settings.aws_region)
-            return ssm.get_parameter(
-                Name=settings.ssm_openai_api_key_path, WithDecryption=True
-            )["Parameter"]["Value"]
+            response = ssm.get_parameter(
+                **{"Name": parameter_path, "WithDecryption": True}
+            )
+            return response["Parameter"]["Value"]
         except Exception as exc:
             raise ConfigurationError(
                 f"Failed to retrieve OpenAI API key from SSM path "
-                f"'{settings.ssm_openai_api_key_path}': {type(exc).__name__}"
+                f"'{parameter_path}': {type(exc).__name__}"
             ) from exc
 
     if settings.openai_api_key:
