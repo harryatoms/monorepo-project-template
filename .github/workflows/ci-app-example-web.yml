@@ -1,6 +1,12 @@
 name: CI — Example Web
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/example-web/**"
+      - ".github/workflows/deploy-app-example-web.yml"
+      - ".github/actions/**"
   pull_request:
     branches: [main]
     paths:

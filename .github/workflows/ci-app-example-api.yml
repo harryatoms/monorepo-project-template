@@ -1,6 +1,14 @@
 name: CI — Example API
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/example-api/**"
+      - "packages/example-prompts/**"
+      - "packages/example-evals/**"
+      - ".github/workflows/deploy-app-example-api.yml"
+      - ".github/actions/**"
   pull_request:
     branches: [main]
     paths:
