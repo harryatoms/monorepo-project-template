@@ -67,7 +67,7 @@ def _resolve_api_key(settings: Settings) -> str:
         try:
             ssm = boto3.client("ssm", region_name=settings.aws_region)
             return ssm.get_parameter(
-                Name=settings.ssm_openai_api_key_path, WithDecryption=True
+                Name=settings.ssm_openai_api_key_path, WithDecryption=True # gitleaks:allow
             )["Parameter"]["Value"]
         except Exception as exc:
             raise ConfigurationError(
